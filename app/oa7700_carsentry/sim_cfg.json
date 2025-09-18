@@ -1,0 +1,106 @@
+{
+  "head" : "isp",
+  "filelist" : "testseq.csv",
+  "_filelist_comment" : "it can be csv file list, or a sequence name",
+  "dataset_dir" : "../../dataset",
+  "_dataset_dir_comment" : "relative to the run_qa.py",
+  "output_dir" : "output",
+  "_output_dir_comment" : "relative to current working path",
+  "force" : 0,
+  "isp" : {
+    "module" : "../../lib/isp_OA7700/bin/isp_sim_OA7700.py",
+    "runname" : "YUV_original_isp",
+    "out" : "yuvscale",
+    "force" : 1,
+    "param" : {
+      "lp" : "config/isp/isp_para.txt",
+      "gamma_lut" : "config/isp/gamma.txt"
+    }
+  },
+  "yuvscale" : {
+    "module" : "../../lib/yuvscale_OA7600/bin/yuvscale_OA7700.py",
+    "out" : "yuv2rgb",
+    "next" : "yscale",
+    "runname" : "YUV_256x208",
+    "force" : 1,
+    "out_width" : 256,
+    "out_height" : 208,
+    "param" : {
+      "b" : 8,
+      "lp" : "config/yuvscale/default_param.txt"
+    }
+  },
+  "yuv2rgb" : {
+    "module" : "../../lib/yuv2rgb_OA7700/bin/yuv2rgb.py",
+    "out" : "ovtpd",
+    "runname" : "YUV2RGB_256x208",
+    "force" : 1,
+    "param" : {
+
+    }
+  },
+  "ovtpd" : {
+    "module" : "../../lib/ovtpd/bin/ovtpd.py",
+    "runname" : "OVTPD",
+    "force" : 1,
+    "param" : {
+      "model" : "208x256.c1q2",
+      "conf_thresh" : 0.38,
+      "nms_thresh" : 0.4
+    }
+  },
+  "yscale" : {
+    "module" : "../../lib/yuvscale_OA7600/bin/yuvscale_OA7700.py",
+    "out"  : "md",
+    "runname" : "YUV_480x384",
+    "force" : 1,
+    "out_width" : 480,
+    "out_height" : 384,
+    "param" : {
+      "b" : 8,
+      "lp" : "config/yuvscale/default_param.txt"
+    }
+  },
+  "md" : {
+    "module" : "../../lib/md_OA8100/bin/md_sim_OA8100.py",
+    "out" : "cs_pp",
+    "runname" : "MD",
+    "force" : 1,
+    "out_dist_yuv" : 1,
+    "out_dz_bitmap" : 1,
+    "param" : {
+      "d" : "config/md/default_8100.cfg",
+      "p" : {
+      }
+    }
+  },
+  "cs_pp" : {
+    "module" : "../../lib/cs_pp/bin/cs_pp.py",
+    "in1"  : "ovtpd",
+    "out" : "cs_qa",
+    "runname" : "CS_PP",
+    "force" : 1,
+    "param" : {
+      "bitmap_for_alarm" : "1m",
+      "od_interval": 0
+    }
+  },
+  "cs_qa" : {
+    "module" : "../../lib/cs_qa/bin/cs_qa.py",
+    "in1"  : "isp",
+    "runname" : "CS_QA",
+    "force" : 1,
+    "param" : {
+      "dzone_for_alarm" : "1m",
+      "od_interval": 0,
+      "tp_margin": 5
+    }
+  },
+  "list_qa" : {
+	"module": "../../lib/list_qa/bin/list_qa_cs.py",
+	"runname" : "",
+	"force" : 1,
+	"param" : {
+	}
+  }
+}

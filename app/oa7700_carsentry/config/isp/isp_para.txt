@@ -1,0 +1,17 @@
+
+COVPB2ProcessFlow_V2
+bInterpolateEnable=1
+bGlobalDumpEnable=1
+
+CRGBTriangleInterpolateFilter_V2
+sharpenmt_t1=4
+sharpenmt_t2=32
+sharpenmt_offset1=200
+sharpenmt_offset2=200
+dns_t1=16
+dns_t2=206
+dns_offset1=6
+dns_offset2=208
+thre_sft=0
+dns_man_en=0
+sharpenmt_man_en=1
